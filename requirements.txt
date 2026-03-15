@@ -1,0 +1,21 @@
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.4.2
+numpy==1.26.2
+scipy==1.11.4
+pybind11==2.11.1
+
+# orbital propagation
+sgp4==2.23
+
+# http client for telemetry generator
+requests==2.31.0
+
+# async utilities used by fastapi
+anyio==3.7.1
+
+# typing helpers for pydantic
+typing_extensions==4.8.0
+
+# datetime utilities
+python-dateutil==2.8.2
