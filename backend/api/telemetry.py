@@ -1,7 +1,8 @@
 from fastapi import APIRouter, status
 from pydantic import BaseModel
 from typing import List
-from core.state import SIMULATION_STATE  # Import our new filing cabinet
+from core.state import SIMULATION_STATE  # Import our filing cabinet
+from core.collision import detect_collisions  # <-- NEW: Import the KD-Tree radar
 
 router = APIRouter()
 
@@ -32,8 +33,18 @@ async def ingest_telemetry(payload: TelemetryPayload):
         elif obj.type == "DEBRIS":
             SIMULATION_STATE["debris"][obj.id] = {"r": obj.r.dict(), "v": obj.v.dict()}
 
+    # <-- NEW: Trigger the K-D Tree scan on the freshly updated data
+    collision_warnings = detect_collisions(SIMULATION_STATE)
+    
+    # Save the warnings into the server's memory so other endpoints can see them
+    SIMULATION_STATE["active_warnings"] = collision_warnings
+
+    # Print a critical alert to your terminal if satellites are in danger
+    if collision_warnings:
+        print(f"CRITICAL: {len(collision_warnings)} collisions detected!")
+
     return {
         "status": "ACK",
         "processed_count": len(payload.objects),
-        "active_cdm_warnings": 0
+        "active_cdm_warnings": len(collision_warnings)  # <-- NEW: Return the actual count instead of 0
     }

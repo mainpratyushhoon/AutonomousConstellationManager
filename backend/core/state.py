@@ -4,5 +4,6 @@
 SIMULATION_STATE = {
     "satellites": {},
     "debris": {},
+    "active_warnings": [],
     "last_updated": None
 }
