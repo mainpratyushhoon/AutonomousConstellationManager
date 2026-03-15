@@ -8,7 +8,7 @@ from sgp4.api import Satrec, jday
 # --- Configuration ---
 API_URL = "http://localhost:8000/api/telemetry"
 URL_ACTIVE = "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle"
-URL_DEBRIS = "https://celestrak.org/NORAD/elements/gp.php?GROUP=debris&FORMAT=tle"
+URL_DEBRIS = "https://celestrak.org/NORAD/elements/gp.php?GROUP=cosmos-2251-debris&FORMAT=tle"
 
 TARGET_SATELLITES = 50
 TARGET_DEBRIS = 500  # Start with 500 for testing, scale up to 10,000+ later
