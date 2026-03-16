@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status
-from core.state import SIMULATION_STATE
-from core.coordinates import eci_to_lat_lon_alt # <-- Import your conversion math!
+from backend.core.state import SIMULATION_STATE
+from backend.core.coordinates import eci_to_lat_lon_alt # <-- Import your conversion math!
 
 router = APIRouter()
 

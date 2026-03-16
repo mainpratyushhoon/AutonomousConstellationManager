@@ -4,9 +4,9 @@ import numpy as np
 import copy
 from datetime import datetime, timedelta
 
-from core.state import SIMULATION_STATE
-from core.physics import rk4_step
-from core.collision import detect_collisions, CRITICAL_THRESHOLD_KM
+from backend.core.state import SIMULATION_STATE
+from backend.core.physics import rk4_step
+from backend.core.collision import detect_collisions, CRITICAL_THRESHOLD_KM
 
 router = APIRouter()
 

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, status
 from pydantic import BaseModel
 from typing import List
-from core.state import SIMULATION_STATE  # Import our filing cabinet
-from core.collision import detect_collisions  # <-- NEW: Import the KD-Tree radar
+from backend.core.state import SIMULATION_STATE  # Import our filing cabinet
+from backend.core.collision import detect_collisions  # <-- NEW: Import the KD-Tree radar
 
 router = APIRouter()
 
