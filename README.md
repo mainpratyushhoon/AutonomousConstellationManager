@@ -1,16 +1,3 @@
-```bash
-cd frontend/orbital-insight
-npm install
-npm run dev
-```
-
-Then open in browser:
-
-http://localhost:5173
-
-
-
-````md
 ## Running the System
 
 Follow these steps to start the complete system.
@@ -23,7 +10,7 @@ From the project root directory:
 
 ```bash
 uvicorn main:app --reload
-````
+```
 
 The backend will start at:
 
@@ -83,5 +70,3 @@ http://localhost:5173
 
 The dashboard will start displaying satellites and debris once the telemetry generator is running.
 
-```
-```
