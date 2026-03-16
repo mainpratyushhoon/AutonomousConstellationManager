@@ -2,7 +2,8 @@ import numpy as np
 from scipy.spatial import cKDTree
 
 # The hackathon will define a minimum safe distance. We will use 10 km.
-COLLISION_THRESHOLD_KM = 5000.0 
+WARNING_RADIUS_KM = 5000.0
+CRITICAL_THRESHOLD_KM = 5000.0 
 
 def detect_collisions(simulation_state):
     """
@@ -33,7 +34,7 @@ def detect_collisions(simulation_state):
 
         # query_ball_point instantly returns the indices of all debris 
         # that fall within the specified radius of the satellite
-        close_debris_indices = tree.query_ball_point(sat_coord, COLLISION_THRESHOLD_KM)
+        close_debris_indices = tree.query_ball_point(sat_coord, WARNING_RADIUS_KM)
 
         for idx in close_debris_indices:
             deb_id = debris_ids[idx]
