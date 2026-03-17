@@ -1,5 +1,10 @@
-body {
+html, body, #root {
+  height: 100%;
+  width: 100%;
   margin: 0;
+}
+
+body {
   background-color: #0b0c10;
   color: #c5c6c7;
   font-family: 'Courier New', Courier, monospace;
@@ -18,23 +23,35 @@ header h1 {
   margin-top: 0;
 }
 
+/* Grid Layout */
 .grid-layout {
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-template-rows: 1fr 1fr;
   gap: 15px;
-  flex-grow: 1;
+  flex: 1;
+  min-height: 0;
 }
 
+/* Module containers */
 .module {
   background-color: #1f2833;
   border: 1px solid #45a29e;
   border-radius: 8px;
   padding: 15px;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 250px;
 }
 
-/* Make the map take up the whole left side */
+/* Map spans full left column */
 .map-module {
-  grid-row: span 2; 
+  grid-row: span 2;
+}
+
+/* Chart containers need explicit height */
+.telemetry-module,
+.polar-module,
+.timeline-module {
+  height: 100%;
 }

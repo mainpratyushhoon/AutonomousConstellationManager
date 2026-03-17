@@ -1,84 +1,135 @@
+import React, { useState, useEffect } from 'react';
+
 import GroundTrackMap from './components/GroundTrackMap';
 import TelemetryHeatmap from './components/TelemetryHeatmap';
 import ConjunctionBullseye from './components/ConjunctionBullseye';
 import ManeuverTimeline from './components/ManeuverTimeline';
-import React, { useState, useEffect } from 'react';
+
 import './App.css';
 
 function App() {
-  // State to hold the massive payload from the backend
-  const [telemetry, setTelemetry] = useState({ satellites: [], debris_cloud: [], conjunctions: [], maneuvers: [] });
 
-  // Step 4.1: The API Polling Engine
+  const [telemetry, setTelemetry] = useState({
+    satellites: [],
+    debris_cloud: [],
+    conjunctions: [],
+    maneuvers: []
+  });
+
   useEffect(() => {
-    // This fetches data from your backend's snapshot endpoint
+
     const fetchSnapshot = async () => {
       try {
-        // Hitting the specific endpoint required by the hackathon [cite: 753, 908]
-        const response = await fetch('http://localhost:8000/api/visualization/snapshot');
+
+        const response = await fetch(
+          'http://localhost:8000/api/visualization/snapshot'
+        );
+
         const data = await response.json();
-        
-        // Make sure we have valid arrays before setting state to prevent crashes
+
         setTelemetry({
           satellites: data.satellites || [],
           debris_cloud: data.debris_cloud || [],
           conjunctions: data.conjunctions || [],
-          maneuvers: []
+          maneuvers: data.maneuvers || []
         });
+
       } catch (error) {
-        console.error("Failed to fetch telemetry. Is the Python backend running?", error);
+        console.error(
+          "Failed to fetch telemetry. Is the Python backend running?",
+          error
+        );
       }
     };
 
-    // Poll the backend every 1 second (1000 milliseconds)
+    fetchSnapshot();
     const intervalId = setInterval(fetchSnapshot, 1000);
-    
-    // Cleanup the interval if the component ever unmounts
+
     return () => clearInterval(intervalId);
+
   }, []);
+
+  // Identify the satellite currently involved in a conjunction
+  const focusSatellite =
+    telemetry.conjunctions.length > 0
+      ? telemetry.conjunctions[0].satellite_id
+      : null;
 
   return (
     <div className="dashboard-container">
+
       <header>
         <h1>Orbital Insight Visualizer</h1>
       </header>
-      
+
       <main className="grid-layout">
-        {/* Module 1: The Ground Track Map */}
+
+        {/* Ground Track Map */}
         <section className="module map-module">
+
           <h2>Ground Track (Mercator Projection)</h2>
-          <div style={{ position: 'relative', flexGrow: 1, height: '85%', marginTop: '10px' }}>
-            <GroundTrackMap 
-               satellites={telemetry.satellites} 
-               debrisCloud={telemetry.debris_cloud} 
-            />
+
+          <div
+            style={{
+              width: '100%',
+              height: '500px',
+              position: 'relative',
+              marginTop: '10px'
+            }}
+          >
+
+            {telemetry.satellites.length > 0 && (
+              <GroundTrackMap
+                satellites={telemetry.satellites}
+                debrisCloud={telemetry.debris_cloud}
+                focusSatellite={focusSatellite}   
+              />
+            )}
+
           </div>
+
           <p style={{ marginTop: '5px' }}>
-            Tracking {telemetry.satellites.length} Sats & {telemetry.debris_cloud.length} Debris
+            Tracking {telemetry.satellites.length} Sats &{' '}
+            {telemetry.debris_cloud.length} Debris
           </p>
+
         </section>
 
-        {/* Module 2: The Conjunction Bullseye Plot */}
+        {/* Conjunction Plot */}
         <section className="module polar-module">
+
           <h2>Conjunction "Bullseye" Plot</h2>
-          <ConjunctionBullseye debrisData={telemetry.conjunctions}/>
-          {/* Recharts Polar Chart will go here */}
+
+          <ConjunctionBullseye
+            conjunctions={telemetry.conjunctions}
+          />
+
         </section>
 
-        {/* Module 3: Telemetry & Resource Heatmaps */}
+        {/* Telemetry Heatmap */}
         <section className="module telemetry-module">
+
           <h2>Fleet Telemetry & Fuel</h2>
-          <TelemetryHeatmap satellites={telemetry.satellites} />
-          {/* Visual fuel gauges go here */}
+
+          <TelemetryHeatmap
+            satellites={telemetry.satellites}
+          />
+
         </section>
 
-        {/* Module 4: The Maneuver Timeline */}
+        {/* Maneuver Timeline */}
         <section className="module timeline-module">
+
           <h2>Maneuver Timeline (Gantt)</h2>
-          <ManeuverTimeline maneuvers={telemetry.maneuvers} />
-          {/* Scheduler showing burn times and 600-second cooldowns goes here */}
+
+          <ManeuverTimeline
+            maneuvers={telemetry.maneuvers}
+          />
+
         </section>
+
       </main>
+
     </div>
   );
 }
